@@ -11,7 +11,7 @@ class MatrixFactorization(torch.nn.Module):
         user_emb = self.user_embedding(user)
         item_emb = self.item_embedding(item)
 
-        return (user_emb*item_emb).sum(1)
+        return (user_emb * item_emb).sum(1)
 
 
 class mlp(torch.nn.Module):

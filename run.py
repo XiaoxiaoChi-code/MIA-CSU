@@ -50,9 +50,9 @@ if __name__ == "__main__":
 
     device = torch.device('cuda:{}'.format(args.gpu) if torch.cuda.is_available() and args.gpu != -1 else 'cpu')
 
-    num_users = len(train_src['user_id'].unique())
+    num_users = train_src['user_id'].max()
     num_items = len(train_src['book_id'].unique())
-    mf_model = MatrixFactorization(num_users, num_items, num_emd=10)
+    mf_model = MatrixFactorization(num_users+1, num_items, num_emd=10).to(device)
     loss_func = torch.nn.MSELoss()
     optimizer = torch.optim.SGD(mf_model.parameters(), lr=0.01, momentum=0.9)
 
@@ -62,7 +62,7 @@ if __name__ == "__main__":
         loss_epoch = []
         mf_model.train()
         for _, (user, item, rating) in enumerate(dataloader):
-            user, item, rating = user.to(args.device), item.to(args.device), rating.to(args.device)
+            user, item, rating = user.to(device), item.to(device), rating.to(device)
             predicted_rating = mf_model(user, item)
             loss = loss_func(predicted_rating, rating)
             print(loss.item())
