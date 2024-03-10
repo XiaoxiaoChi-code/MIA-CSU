@@ -41,7 +41,7 @@ if __name__ == "__main__":
 
     train_src_array = train_src.to_numpy()
     users, items, ratings = train_src_array[:,0].tolist(), train_src_array[:,1].tolist(), train_src_array[:,2].tolist()
-    users_tensor, items_tensor, ratings_tensor = torch.LongTensor(users), torch.LongTensor(items), torch.LongTensor(ratings)
+    users_tensor, items_tensor, ratings_tensor = torch.LongTensor(users), torch.LongTensor(items), torch.FloatTensor(ratings)
     dataset = UserItemRatingRatingDataset(user_tensor=users_tensor,
                                           item_tensor=items_tensor,
                                           rating_tensor=ratings_tensor)
@@ -65,13 +65,13 @@ if __name__ == "__main__":
             user, item, rating = user.to(device), item.to(device), rating.to(device)
             predicted_rating = mf_model(user, item)
             loss = loss_func(predicted_rating, rating)
-            print(loss.item())
+            # print(loss.item())
             loss_epoch.append(loss.item())
             loss.backward()
             optimizer.step()
             optimizer.zero_grad()
 
-        print("for epoch {}, the loss is {]".format(t, sum(loss_epoch)/ len(loss_epoch)))
+        print("for epoch {}, the loss is {}".format(t, sum(loss_epoch)/ len(loss_epoch)))
 
 
 
