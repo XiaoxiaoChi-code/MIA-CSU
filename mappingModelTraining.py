@@ -50,12 +50,12 @@ if __name__ == "__main__":
 
     criterion = torch.nn.CrossEntropyLoss()
     # 这个模型如果效果不好，参考RecBole 库是怎么定义这个函数的
-    mlp_model = mlp(dim_in=10, dim_hidden1=20, dim_hidden2=50, dim_out=10).to(device)
+    mlp_model = mlp(dim_in=10, dim_hidden1=20, dim_out=10).to(device)
     optimizer = torch.optim.SGD(mlp_model.parameters(), lr=0.01, momentum=0.7)
     for e in range(20):
         loss_epoch = []
         for _, (feature, label) in enumerate(dataloader):
-            feature, label = feature.to(torch.float64).to(device), label.to(torch.float64).to(device)
+            feature, label = feature.to(torch.float32).to(device), label.to(torch.float32).to(device)
             mlp_model.zero_grad()
             predicted_value = mlp_model(feature)
 
