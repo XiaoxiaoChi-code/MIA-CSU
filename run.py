@@ -59,6 +59,7 @@ if __name__ == "__main__":
 
     epoch = 50
 
+    print("Start training source domain")
     for t in range(epoch):
         loss_epoch = []
         mf_model.train()
@@ -87,6 +88,7 @@ if __name__ == "__main__":
 
 
     # training target model
+    print("Start training target model")
     train_tgt_array = train_tgt.to_numpy()
     users_tgt, items_tgt, ratings_tgt = train_tgt_array[:, 0].tolist(), train_tgt_array[:, 1].tolist(), train_tgt_array[:,2].tolist()
     users_tgt_tensor, items_tgt_tensor, ratings_tgt_tensor = torch.LongTensor(users_tgt), torch.LongTensor(items_tgt), torch.FloatTensor(ratings_tgt)
@@ -98,8 +100,8 @@ if __name__ == "__main__":
     device = torch.device('cuda:{}'.format(args.gpu) if torch.cuda.is_available() and args.gpu != -1 else 'cpu')
 
     num_users_tgt = train_tgt['user_id'].max()
-    num_items_tgt = len(train_tgt['book_id'].unique())
-    mf_model_tgt = MatrixFactorization(num_users_tgt + 1, num_items_tgt, num_emd=10).to(device)
+    num_items_tgt = train_tgt['movie_id'].max()
+    mf_model_tgt = MatrixFactorization(num_users_tgt + 1, num_items_tgt+1, num_emd=10).to(device)
     loss_func_tgt = torch.nn.MSELoss()
     optimizer_tgt = torch.optim.SGD(mf_model_tgt.parameters(), lr=0.01, momentum=0.9)
 
