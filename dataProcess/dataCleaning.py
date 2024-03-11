@@ -51,6 +51,7 @@ def mapping(src, tgt):
 
 
 def splitting(src, tgt):
+    random.seed(1200)
     # splitting
     print("All iid: {}.".format(len(set(src.book_id) | set(tgt.movie_id))))
     src_users = set(src.user_id.unique())
@@ -61,12 +62,14 @@ def splitting(src, tgt):
     # 这部分用户作为 target domain 的 cold start users
     test_users = set(random.sample(co_users, round(ratio * len(co_users))))
 
+    overlapping_users_training = co_users - test_users
+
     train_src = src
     train_tgt = tgt[tgt['user_id'].isin(tgt_users - test_users)]
     test_tgt = tgt[tgt['user_id'].isin(test_users)]
 
 
-    return train_src, train_tgt, test_tgt
+    return train_src, train_tgt, test_tgt, overlapping_users_training, test_users
 
 
 
@@ -84,11 +87,26 @@ if __name__ == "__main__":
 
 
     # splitting
-    train_src, train_tgt, test_tgt = splitting(src, tgt)
+    train_src, train_tgt, test_tgt, training_user_IDs, testing_user_IDs = splitting(src, tgt)
+
+
 
     train_src.to_csv('../data/source_trainingData.csv', sep=',', index=0)
     train_tgt.to_csv('../data/target_trainingData.csv', sep=',', index=0)
     test_tgt.to_csv('../data/target_testingData.csv', sep=',', index=0)
+
+
+    training_user_IDs = np.array(list(training_user_IDs))
+    testing_user_IDs = np.array(list(testing_user_IDs))
+
+    print(training_user_IDs)
+    print(testing_user_IDs)
+
+    np.savetxt('../data/mapping/trainingUserIDs.csv', training_user_IDs, delimiter=',')
+    np.savetxt('../data/mapping/testingUserIDs.csv', testing_user_IDs, delimiter=',')
+
+
+
 
 
 
