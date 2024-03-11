@@ -20,18 +20,18 @@ class PreprocessDataset(Dataset):
 if __name__ == "__main__":
     args = get_parameter()
     # read training users ID from file
-    training_users_IDs = pd.read_csv('../data/mapping/trainingUserIDs.csv')
+    training_users_IDs = pd.read_csv('data/mapping/trainingUserIDs.csv')
     training_users_IDs = training_users_IDs.to_numpy().squeeze().astype(int)
     # read testing users ID from file
-    testing_users_IDs = pd.read_csv('../data/mapping/testingUserIDs.csv')
+    testing_users_IDs = pd.read_csv('data/mapping/testingUserIDs.csv')
     testing_users_IDs = testing_users_IDs.to_numpy().squeeze().astype(int)
 
 
     # read user embedding matrix obtained from trained source model
-    user_embedding_src = pd.read_csv('../model_parameters/user_embedding_source_model.csv', header=None)
+    user_embedding_src = pd.read_csv('model_parameters/user_embedding_source_model.csv', header=None)
     user_embedding_src_array = user_embedding_src.to_numpy()
     # read user embedding matrix obtained from trained target model
-    user_embedding_tgt = pd.read_csv('../model_parameters/user_embedding_target_model.csv', header=None)
+    user_embedding_tgt = pd.read_csv('model_parameters/user_embedding_target_model.csv', header=None)
     user_embedding_tgt_array = user_embedding_tgt.to_numpy()
 
     training_embeddings_input = []
@@ -50,7 +50,7 @@ if __name__ == "__main__":
 
     criterion = torch.nn.CrossEntropyLoss()
     # 这个模型如果效果不好，参考RecBole 库是怎么定义这个函数的
-    mlp_model = mlp(dim_in=10, dim_hidden1=20, dim_hidden2=50, dim_out=10)
+    mlp_model = mlp(dim_in=10, dim_hidden1=20, dim_hidden2=50, dim_out=10).to(device)
     optimizer = torch.optim.SGD(mlp_model.parameters(), lr=0.01, momentum=0.7)
     for e in range(20):
         loss_epoch = []
