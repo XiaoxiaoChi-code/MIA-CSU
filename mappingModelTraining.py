@@ -22,9 +22,7 @@ if __name__ == "__main__":
     # read training users ID from file
     training_users_IDs = pd.read_csv('data/mapping/trainingUserIDs.csv')
     training_users_IDs = training_users_IDs.to_numpy().squeeze().astype(int)
-    # read testing users ID from file
-    testing_users_IDs = pd.read_csv('data/mapping/testingUserIDs.csv')
-    testing_users_IDs = testing_users_IDs.to_numpy().squeeze().astype(int)
+
 
 
     # read user embedding matrix obtained from trained source model
@@ -67,4 +65,8 @@ if __name__ == "__main__":
             optimizer.step()
             loss_epoch.append(loss.item())
         print("for epoch {}, the loss is {}".format(e, sum(loss_epoch) / len(loss_epoch)))
+
+    # after training the model, we need to store it.
+    PATH = "model_parameters/mapping_model.pt"
+    torch.save(mlp_model.state_dict(), PATH)
 
